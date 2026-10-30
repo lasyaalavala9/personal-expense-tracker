@@ -4,6 +4,7 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 
 public class ExpenseManager {
+
     private ArrayList<Expense> expenses;
     private int nextId;
 
@@ -18,28 +19,25 @@ public class ExpenseManager {
         }
     }
 
+    // Add a new expense
     public void addExpense(String title, String category,
                            double amount, LocalDate date) {
 
-        // Validate title
         if (title == null || title.trim().isEmpty()) {
             System.out.println("Error: Title cannot be empty.");
             return;
         }
 
-        // Validate category
         if (category == null || category.trim().isEmpty()) {
             System.out.println("Error: Category cannot be empty.");
             return;
         }
 
-        // Validate amount
         if (!Double.isFinite(amount) || amount <= 0) {
             System.out.println("Error: Amount must be greater than zero.");
             return;
         }
 
-        // Validate date
         if (date == null) {
             System.out.println("Error: Date cannot be empty.");
             return;
@@ -56,7 +54,9 @@ public class ExpenseManager {
         System.out.println("Expense added successfully!");
     }
 
+    // View all expenses
     public void viewExpenses() {
+
         if (expenses.isEmpty()) {
             System.out.println("No expenses found.");
             return;
@@ -70,7 +70,9 @@ public class ExpenseManager {
         }
     }
 
+    // Search expenses by category
     public void searchByCategory(String category) {
+
         if (category == null || category.trim().isEmpty()) {
             System.out.println("Error: Category cannot be empty.");
             return;
@@ -90,7 +92,9 @@ public class ExpenseManager {
         }
     }
 
+    // Delete an expense using its ID
     public void deleteExpense(int id) {
+
         boolean removed = expenses.removeIf(
                 expense -> expense.getId() == id
         );
@@ -103,7 +107,9 @@ public class ExpenseManager {
         }
     }
 
+    // Calculate total expenses
     public void showTotalExpenses() {
+
         double total = 0;
 
         for (Expense expense : expenses) {
@@ -113,7 +119,9 @@ public class ExpenseManager {
         System.out.printf("Total expenses: Rs.%.2f%n", total);
     }
 
+    // Display expenses grouped by category
     public void showCategorySummary() {
+
         if (expenses.isEmpty()) {
             System.out.println("No expenses available.");
             return;
@@ -141,6 +149,7 @@ public class ExpenseManager {
         System.out.println("\nCategory Summary");
 
         for (String category : categories) {
+
             double total = 0;
 
             for (Expense expense : expenses) {
@@ -153,10 +162,11 @@ public class ExpenseManager {
         }
     }
 
-    public void showMonthlySummary(YearMonth month) {
+    // Calculate expenses for a particular month
+    public double getMonthlyExpenses(YearMonth month) {
+
         if (month == null) {
-            System.out.println("Error: Month cannot be empty.");
-            return;
+            return 0;
         }
 
         double total = 0;
@@ -167,10 +177,24 @@ public class ExpenseManager {
             }
         }
 
+        return total;
+    }
+
+    // Display monthly expense summary
+    public void showMonthlySummary(YearMonth month) {
+
+        if (month == null) {
+            System.out.println("Error: Month cannot be empty.");
+            return;
+        }
+
+        double total = getMonthlyExpenses(month);
+
         System.out.printf(
                 "Total expenses for %s: Rs.%.2f%n",
                 month, total
         );
     }
 }
+
 
