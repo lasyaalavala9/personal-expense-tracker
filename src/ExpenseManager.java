@@ -20,12 +20,38 @@ public class ExpenseManager {
 
     public void addExpense(String title, String category,
                            double amount, LocalDate date) {
+
+        // Validate title
+        if (title == null || title.trim().isEmpty()) {
+            System.out.println("Error: Title cannot be empty.");
+            return;
+        }
+
+        // Validate category
+        if (category == null || category.trim().isEmpty()) {
+            System.out.println("Error: Category cannot be empty.");
+            return;
+        }
+
+        // Validate amount
+        if (!Double.isFinite(amount) || amount <= 0) {
+            System.out.println("Error: Amount must be greater than zero.");
+            return;
+        }
+
+        // Validate date
+        if (date == null) {
+            System.out.println("Error: Date cannot be empty.");
+            return;
+        }
+
         Expense expense = new Expense(
-                nextId++, title, category, amount, date
+                nextId, title.trim(), category.trim(), amount, date
         );
 
         expenses.add(expense);
         FileManager.saveExpenses(expenses);
+        nextId++;
 
         System.out.println("Expense added successfully!");
     }
@@ -45,10 +71,15 @@ public class ExpenseManager {
     }
 
     public void searchByCategory(String category) {
+        if (category == null || category.trim().isEmpty()) {
+            System.out.println("Error: Category cannot be empty.");
+            return;
+        }
+
         boolean found = false;
 
         for (Expense expense : expenses) {
-            if (expense.getCategory().equalsIgnoreCase(category)) {
+            if (expense.getCategory().equalsIgnoreCase(category.trim())) {
                 System.out.println(expense);
                 found = true;
             }
@@ -93,7 +124,16 @@ public class ExpenseManager {
         for (Expense expense : expenses) {
             String category = expense.getCategory();
 
-            if (!categories.contains(category)) {
+            boolean exists = false;
+
+            for (String existingCategory : categories) {
+                if (existingCategory.equalsIgnoreCase(category)) {
+                    exists = true;
+                    break;
+                }
+            }
+
+            if (!exists) {
                 categories.add(category);
             }
         }
@@ -114,6 +154,11 @@ public class ExpenseManager {
     }
 
     public void showMonthlySummary(YearMonth month) {
+        if (month == null) {
+            System.out.println("Error: Month cannot be empty.");
+            return;
+        }
+
         double total = 0;
 
         for (Expense expense : expenses) {
@@ -128,3 +173,4 @@ public class ExpenseManager {
         );
     }
 }
+
